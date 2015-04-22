@@ -1,0 +1,9 @@
+C:\Users\DoctorSalt\Documents\TestGame\Temp\UnityVS_bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\DoctorSalt\Documents\TestGame\Temp\UnityVS_bin\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\DoctorSalt\Documents\TestGame\Temp\UnityVS_bin\Debug\UnityEditor.dll
+C:\Users\DoctorSalt\Documents\TestGame\Temp\UnityVS_bin\Debug\UnityEngine.dll
+C:\Users\DoctorSalt\Documents\TestGame\Temp\UnityVS_bin\Debug\UnityEngine.xml
+C:\Users\DoctorSalt\Documents\TestGame\Temp\UnityVS_bin\Debug\UnityEditor.xml
+C:\Users\DoctorSalt\Documents\TestGame\obj\Debug\UnityVS.TestGame.CSharp.Plugins.csprojResolveAssemblyReference.cache
+C:\Users\DoctorSalt\Documents\TestGame\obj\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\DoctorSalt\Documents\TestGame\obj\Debug\Assembly-CSharp-firstpass.pdb
