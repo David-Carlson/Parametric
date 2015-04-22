@@ -1,0 +1,15 @@
+
+rcstjohn@umass.edu
+The Ball bounce at the beginning is very satisfying
+The speed of the ball can be a bit difficult to control
+What separates this game from other dodge the enemies games?
+Is it going to be a 2d or 3d game in the end.
+3 unique types of movement blink, drop, and choose angle. 
+
+richardyan422@gmail.com
+Jump should move set distance upwards instead of having to point it
+(Unless I'm not understanding the instructions)
+The concept is interesting. Look into The Impossible Game.
+The camera should follow the ball.
+You shouldn't implement enemy AI imo, it might make it too difficult.
+Best of luck!

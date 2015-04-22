@@ -189,6 +189,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afc5c28a52d453848b9982217f4de9e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemy: {fileID: 0}
+  enemyStart: {x: 0, y: 0}
+  spacing: {x: 0, y: 0}
 --- !u!23 &1676683773
 Renderer:
   m_ObjectHideFlags: 0
