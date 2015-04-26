@@ -12,6 +12,16 @@ public class PlayerController : MonoBehaviour
     public Vector2 enemyStart;
     public Vector2 spacing;
 
+    void ReflectVelocity()
+    {
+        
+    }
+
+    void OnCollisionEnter2D(Collision2D coll)
+    {
+        //if(coll.gameObject.layer == "")
+        
+    }
     void Start()
     {
         for (int y = 0; y < 2; y++)
