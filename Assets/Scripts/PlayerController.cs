@@ -11,11 +11,26 @@ public class PlayerController : MonoBehaviour
     public GameObject enemy;
     public Vector2 enemyStart;
     public Vector2 spacing;
+    private Rigidbody2D physicsSphere;
 
-    void ReflectVelocity()
+    public Transform groundCheck;
+    private float groundRadius = 0.2f;
+    public LayerMask groundLayer;
+
+    private enum BallState
     {
-        
-    }
+        BoostCharging,
+        Boosting,
+        Dropping,
+        DropStick,
+        TeleportCharging,
+        Teleporting,
+        Stunned,
+        None,
+    };
+    private BallState state = BallState.None;
+
+    public Vector2 lastAnalogueDir;
 
     void OnCollisionEnter2D(Collision2D coll)
     {
@@ -24,35 +39,68 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
-        for (int y = 0; y < 2; y++)
-        {
-            for (int x = 0; x < 2; x++)
-            {
-                //Instantiate(enemy, enemyStart + new Vector2(spacing.x*x, spacing.y*y), Quaternion.identity);
-            }
-        }
+        physicsSphere = GetComponent<Rigidbody2D>();
     }
+
+    // These handle state changes
+    void Update()
+    {
+        switch (state)
+        {
+            // When the player is holding B in the air to charge the boost
+            // Cancels if hitting the ground before letting go, 
+            case BallState.BoostCharging:
+
+                break;
+            // 
+            case BallState.Boosting:
+
+                break;
+            case BallState.Dropping:
+
+                break;
+            case BallState.DropStick:
+
+                break;
+
+            case BallState.TeleportCharging:
+
+                break;
+            case BallState.Teleporting:
+
+                break;
+        }
+       
+    }
+
+    Vector2 GetAnalogueInput()
+    {
+        return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+    }
+
+    void HandleHorizontalMovement()
+    {
+        physicsSphere.AddForce(new Vector2(Input.GetAxis("Horizontal")*speed, 0));
+    }
+
+    IEnumerator StunCoroutine(float stunTime)
+    {
+        float timeStunned = 0f;
+        while (timeStunned < stunTime)
+        {
+            
+        }
+
+
+        yield return null;
+    }
+
+  
 
     void FixedUpdate()
     {
-        
-        if (Input.GetButtonDown("Fire1"))
-        {
-            Vector2 dir = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            dir.Normalize();
-            GetComponent<Rigidbody2D>().velocity = dir*speed;
-        }
-        if (Input.GetButtonDown("Fire2"))
-        {
-            Vector2 normal = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            normal.Normalize();
+        //OnGround = Physics2D.OverlapCircle(groundCheck.position, groundRadius, groundLayer).
 
-            GetComponent<Rigidbody2D>().velocity *= -1;
-
-        }
-
-        Vector2 force = new Vector2(Input.GetAxis("Horizontal"), 0);
-        GetComponent<Rigidbody2D>().AddForce(force * speed);
 
     }
 }
