@@ -1,40 +1,41 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &151574
+--- !u!1 &123048
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 418036}
-  - 212: {fileID: 21208082}
-  - 60: {fileID: 6048844}
+  - 4: {fileID: 421252}
+  - 212: {fileID: 21252940}
+  - 114: {fileID: 11444848}
+  - 60: {fileID: 6014082}
   m_Layer: 0
-  m_Name: Platform
+  m_Name: PlatformManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &418036
+--- !u!4 &421252
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151574}
+  m_GameObject: {fileID: 123048}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.8400002, y: 0, z: 0}
-  m_LocalScale: {x: 50.6956787, y: 19.0767021, z: 1}
+  m_LocalPosition: {x: 100, y: 10, z: 0}
+  m_LocalScale: {x: 60.834816, y: 19.5536251, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!60 &6048844
+--- !u!60 &6014082
 PolygonCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151574}
+  m_GameObject: {fileID: 123048}
   m_Enabled: 1
   m_Material: {fileID: 6200000, guid: 1bd648518d79572469c45934e55e9e9b, type: 2}
   m_IsTrigger: 0
@@ -50,12 +51,33 @@ PolygonCollider2D:
       - {x: .409999996, y: -.0299999993}
       - {x: .409999996, y: .0399999991}
       - {x: .389999986, y: .0599999987}
---- !u!212 &21208082
+--- !u!114 &11444848
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 966091f39f9c54b45906ceec3ff8be4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 418036, guid: 5d7facb890cd17c4bb58f5316d4a7622, type: 2}
+  numberOfObjects: 6
+  recycleOffset: 20
+  startPosition: {x: 0, y: 0, z: 0}
+  minSize: {x: 50, y: 10, z: 1}
+  maxSize: {x: 61, y: 20, z: 1}
+  minGap: {x: 30, y: 15, z: 0}
+  maxGap: {x: 40, y: 23, z: 0}
+  minY: -5
+  maxY: 10
+--- !u!212 &21252940
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 151574}
+  m_GameObject: {fileID: 123048}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -85,5 +107,5 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 151574}
+  m_RootGameObject: {fileID: 123048}
   m_IsPrefabParent: 1
