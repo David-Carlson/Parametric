@@ -23,6 +23,8 @@ public class PlayerController : MonoBehaviour
     public float AnalogueResetAmt = 0.5f;
     private bool AnalogueReset = true;
 
+    public static float distanceTraveled;
+
 
     private enum BallState
     {
@@ -54,6 +56,8 @@ public class PlayerController : MonoBehaviour
     // These handle state changes
     void Update()
     {
+        distanceTraveled = transform.position.x;
+
         switch (state)
         {
             // When the player is holding B in the air to charge the boost
@@ -61,7 +65,7 @@ public class PlayerController : MonoBehaviour
             case BallState.BoostCharging:
                 if (Grounded)
                 {
-                    state = BallState.Stunned;
+                    //state = BallState.Stunned;
                 }
                     
                 break;
@@ -112,19 +116,19 @@ public class PlayerController : MonoBehaviour
                     if (Input.GetButtonDown("Down Move"))
                     {
                         Console.WriteLine("Attempng jump in air");
-                        state = BallState.Dropping;
+                        //state = BallState.Dropping;
                         break;
                     }
 
                     if (Input.GetButtonDown("Right Move"))
                     {
-                        state = BallState.BoostCharging;
+                        //state = BallState.BoostCharging;
                         break;
                     }
 
                     if (Input.GetButtonDown("Up Move"))
                     {
-                        state = BallState.TeleportCharging;
+                        //state = BallState.TeleportCharging;
                         analogueDirRequests.Clear();
                         SetLastAnalogueDir();
                     }
