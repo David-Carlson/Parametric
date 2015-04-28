@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
-    
+
     public float speed = 10f;
     public float JumpSpeed = 10f;
 
@@ -41,17 +41,10 @@ public class PlayerController : MonoBehaviour
     // Used for charging shots, doing drop shots
     public List<Vector2> analogueDirRequests = new List<Vector2>();
 
-    void OnCollisionEnter2D(Collision2D coll)
-    {
-        //if(coll.gameObject.layer == "")
-        
-    }
     void Start()
     {
         physicsSphere = GetComponent<Rigidbody2D>();
     }
-
-
 
     void FixedUpdate()
     {
@@ -139,8 +132,8 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
         }
-       
     }
+
 
     void SetLastAnalogueDir()
     {
@@ -181,8 +174,8 @@ public class PlayerController : MonoBehaviour
         {
             
         }
-
-
         yield return null;
     }
+
+
 }
