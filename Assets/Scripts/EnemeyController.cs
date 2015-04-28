@@ -27,6 +27,7 @@ public class EnemeyController : MonoBehaviour {
 		if (col.gameObject.tag == "Player") {
 
 			playerRd.AddForce (dir*speed);
+            playerRd.GetComponent<PlayerController>().Stun();
 		}
 	}
 

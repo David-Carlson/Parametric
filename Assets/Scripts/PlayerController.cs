@@ -23,8 +23,9 @@ public class PlayerController : MonoBehaviour
     public int MaxTeleports = 3;
     public float AnalogueResetAmt = 0.5f;
     private bool AnalogueIsReset = true;
+    private float lastXVel;
 
-    public static float distanceTraveled;
+    public static float distanceTraveled = 0;
 
     private Renderer renderer;
 
@@ -57,12 +58,20 @@ public class PlayerController : MonoBehaviour
         Grounded = Physics2D.OverlapCircle(groundCheck.position, radius, groundLayer);
     }
 
-    void OnCollissionEnter(Collision coll)
+    void OnCollisionEnter2D(Collision2D coll)
     {
-        if (coll.gameObject.layer == enemyLayer.value)
+        //Debug.Log("Hit enemy");
+        if (coll.gameObject.tag == "Enemy")
         {
-            StartCoroutine(StunCoroutine(3f));
+            Debug.Log("Hit enemy");
+            //Stun();
         }
+    }
+
+    public void Stun()
+    {
+        StopAllCoroutines();
+        StartCoroutine(StunCoroutine(3f));
     }
 
     // These handle state changes
@@ -78,7 +87,7 @@ public class PlayerController : MonoBehaviour
                 SetLastAnalogueDir();
                 if (Grounded)
                 {
-                    StartCoroutine(StunCoroutine(3f));
+                    Stun();
                     break;
                 }
                 if (Input.GetButtonUp("Right Move"))
@@ -90,14 +99,12 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
-                        physicsSphere.velocity = analogueDirRequests[0]*4;
+                        physicsSphere.velocity = analogueDirRequests[0] * 4;
                         Debug.Log("Going to : " + analogueDirRequests[0]);
                     }
-                        
-
                     state = BallState.Boosting;
                 }
-                    
+
                 break;
             // 
             case BallState.Boosting:
@@ -105,23 +112,46 @@ public class PlayerController : MonoBehaviour
                     state = BallState.None;
                 break;
             case BallState.Dropping:
-                
+
                 break;
 
             case BallState.DropStick:
                 break;
 
             case BallState.TeleportCharging:
+                physicsSphere.velocity = new Vector2(lastXVel, physicsSphere.velocity.y);
+                if (Input.GetButtonUp("Up Move"))
+                {
+                    if (analogueDirRequests.Count != 0)
+                    {
+                        StopAllCoroutines();
+                        StartCoroutine(TeleportCoroutine(0.7f));
+                        state = BallState.Teleporting;
+                    }
+                        
+                    else
+                        state = BallState.None;
+                }
+                else
+                {
+                    if (analogueDirRequests.Count == 3)
+                    {
+                        state = BallState.Teleporting;
+                        StopAllCoroutines();
+                        StartCoroutine(TeleportCoroutine(0.7f));
+                    }
+                    else
+                        SetLastAnalogueDir();
+                }
 
                 break;
             case BallState.Teleporting:
-
                 break;
             case BallState.Stunned:
                 HandleHorizontalMovement(speed);
                 break;
             case BallState.None:
-                
+
                 HandleHorizontalMovement(speed);
                 if (Grounded)
                 {
@@ -142,9 +172,10 @@ public class PlayerController : MonoBehaviour
                     if (Input.GetButtonDown("Up Move"))
                     {
                         Console.WriteLine("Tele move");
-                        //state = BallState.TeleportCharging;
+                        lastXVel = physicsSphere.velocity.x;
+                        state = BallState.TeleportCharging;
+                        StartCoroutine(TeleportChargeCoroutine(4f));
                         analogueDirRequests.Clear();
-                        SetLastAnalogueDir();
                         break;
                     }
                 }
@@ -165,9 +196,10 @@ public class PlayerController : MonoBehaviour
                     }
                     if (Input.GetButtonDown("Up Move"))
                     {
-                        //state = BallState.TeleportCharging;
+                        lastXVel = physicsSphere.velocity.x;
+                        StartCoroutine(TeleportChargeCoroutine(4f));
+                        state = BallState.TeleportCharging;
                         analogueDirRequests.Clear();
-                        SetLastAnalogueDir();
                     }
                 }
                 break;
@@ -183,11 +215,13 @@ public class PlayerController : MonoBehaviour
 
         if (AnalogueIsReset && currDir.SqrMagnitude() >= 0.9f)
         {
-            if (state == BallState.TeleportCharging)
+            if (state == BallState.TeleportCharging
+                && analogueDirRequests.Count < 3)
             {
                 currDir.Normalize();
                 analogueDirRequests.Add(currDir);
                 AnalogueIsReset = false;
+                Debug.Log("Added " + currDir + " to list of " + analogueDirRequests.Count);
             }
             else
             {
@@ -198,7 +232,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Set to: " + currDir);
             }
         }
-        
+
     }
 
     Vector2 GetAnalogueInput()
@@ -208,7 +242,35 @@ public class PlayerController : MonoBehaviour
 
     void HandleHorizontalMovement(float magnitude)
     {
-        physicsSphere.AddForce(new Vector2(Input.GetAxis("Horizontal")*magnitude, 0));
+        physicsSphere.AddForce(new Vector2(Input.GetAxis("Horizontal") * magnitude, 0));
+    }
+
+    IEnumerator TeleportCoroutine(float timeBetween)
+    {
+        renderer.material.color = Color.magenta;
+        physicsSphere.AddForce(new Vector2(0, 9.81f));
+        while (analogueDirRequests.Count > 0)
+        {
+            physicsSphere.velocity = analogueDirRequests[0]*speed*1.5f;
+            analogueDirRequests.RemoveAt(0);
+            yield return new WaitForSeconds(timeBetween);
+        }
+
+        renderer.material.color = Color.cyan;
+        state = BallState.None;
+    }
+
+    IEnumerator TeleportChargeCoroutine(float time)
+    {
+        renderer.material.color = Color.yellow;
+        float timeSpent = 0f;
+        while (timeSpent < time)
+        {
+            timeSpent += Time.deltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+        state = BallState.None;
+        renderer.material.color = Color.cyan;
     }
 
     IEnumerator StunCoroutine(float stunTime)
