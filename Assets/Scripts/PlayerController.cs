@@ -1,7 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Security.Cryptography.X509Certificates;
-using System.Xml.Schema;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +8,8 @@ public class PlayerController : MonoBehaviour
 
     public float speed = 10f;
     public float JumpSpeed = 10f;
+    public float chargeSpeed;
+    public float amountCharged;
 
     private Rigidbody2D physicsSphere;
 
@@ -84,24 +83,27 @@ public class PlayerController : MonoBehaviour
             // When the player is holding B in the air to charge the boost
             // Cancels if hitting the ground before letting go, 
             case BallState.BoostCharging:
+                
                 SetLastAnalogueDir();
                 if (Grounded)
                 {
-                    Stun();
+                    StopAllCoroutines();
+                    state = BallState.None;
                     break;
                 }
                 if (Input.GetButtonUp("Right Move"))
                 {
                     if (analogueDirRequests.Count == 0)
                     {
-                        physicsSphere.velocity *= 2;
+                        physicsSphere.velocity *= amountCharged;
                         Debug.Log("No boost dir");
                     }
                     else
                     {
-                        physicsSphere.velocity = analogueDirRequests[0] * 4;
+                        physicsSphere.velocity = analogueDirRequests[0]*amountCharged;
                         Debug.Log("Going to : " + analogueDirRequests[0]);
                     }
+                    StopAllCoroutines();
                     state = BallState.Boosting;
                 }
 
@@ -110,6 +112,10 @@ public class PlayerController : MonoBehaviour
             case BallState.Boosting:
                 if (Grounded)
                     state = BallState.None;
+                else
+                {
+                    physicsSphere.AddForce(new Vector2(0, 9.81f), ForceMode2D.Force);
+                }
                 break;
             case BallState.Dropping:
 
@@ -191,6 +197,8 @@ public class PlayerController : MonoBehaviour
                     if (Input.GetButtonDown("Right Move"))
                     {
                         state = BallState.BoostCharging;
+                        StartCoroutine(BoostingChargeCoroutine(2));
+                      
                         analogueDirRequests.Clear();
                         break;
                     }
@@ -251,13 +259,26 @@ public class PlayerController : MonoBehaviour
         physicsSphere.AddForce(new Vector2(0, 9.81f));
         while (analogueDirRequests.Count > 0)
         {
-            physicsSphere.velocity = analogueDirRequests[0]*speed*1.5f;
+            physicsSphere.velocity = analogueDirRequests[0]*speed;
             analogueDirRequests.RemoveAt(0);
             yield return new WaitForSeconds(timeBetween);
         }
 
         renderer.material.color = Color.cyan;
         state = BallState.None;
+    }
+
+    IEnumerator BoostingChargeCoroutine(float maxTime)
+    {
+        amountCharged = 0f;
+        float timeSpent = 0f;
+        while (timeSpent < maxTime)
+        {
+            timeSpent += Time.deltaTime;
+            amountCharged = timeSpent/maxTime*chargeSpeed;
+            yield return new WaitForFixedUpdate();
+        }
+        state = BallState.Boosting;
     }
 
     IEnumerator TeleportChargeCoroutine(float time)
