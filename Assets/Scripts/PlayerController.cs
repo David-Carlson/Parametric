@@ -8,14 +8,9 @@ public class PlayerController : MonoBehaviour
 {
     
     private float speed = 10f;
-    public GameObject enemy;
-    public Vector2 enemyStart;
-    public Vector2 spacing;
     private Rigidbody2D physicsSphere;
+    private bool OnGround = false;
 
-    public Transform groundCheck;
-    private float groundRadius = 0.2f;
-    public LayerMask groundLayer;
 
     private enum BallState
     {
@@ -30,7 +25,10 @@ public class PlayerController : MonoBehaviour
     };
     private BallState state = BallState.None;
 
-    public Vector2 lastAnalogueDir;
+    // First is used to remember the last direction fully pressed down
+    // Used for charging shots, doing drop shots
+    public Vector2 firstAnalogueDir = new Vector2();
+    public Vector2 secondAnalogueDir = new Vector2();
 
     void OnCollisionEnter2D(Collision2D coll)
     {
@@ -50,15 +48,21 @@ public class PlayerController : MonoBehaviour
             // When the player is holding B in the air to charge the boost
             // Cancels if hitting the ground before letting go, 
             case BallState.BoostCharging:
+                if (OnGround)
+                {
+                    state = BallState.Stunned;
 
+                }
+                    
                 break;
             // 
             case BallState.Boosting:
 
                 break;
             case BallState.Dropping:
-
+                if(this.g)
                 break;
+
             case BallState.DropStick:
 
                 break;
