@@ -7,10 +7,12 @@ using System.Collections;
 public class PlayerController : MonoBehaviour
 {
     
-    private float speed = 10f;
+    private float speed = 25f;
     public GameObject enemy;
     public Vector2 enemyStart;
     public Vector2 spacing;
+	public static float distanceTraveled;
+
     private Rigidbody2D physicsSphere;
 
     public Transform groundCheck;
@@ -34,6 +36,7 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D coll)
     {
+
         //if(coll.gameObject.layer == "")
         
     }
@@ -45,6 +48,8 @@ public class PlayerController : MonoBehaviour
     // These handle state changes
     void Update()
     {
+		distanceTraveled = transform.localPosition.x;
+
         switch (state)
         {
             // When the player is holding B in the air to charge the boost
@@ -73,9 +78,10 @@ public class PlayerController : MonoBehaviour
        
     }
 
-    Vector2 GetAnalogueInput()
+    void GetAnalogueInput()
     {
-        return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        Vector2 move = new Vector2(Input.GetAxis("Horizontal"),0 );
+		physicsSphere.AddForce (speed*move);
     }
 
     void HandleHorizontalMovement()
@@ -99,6 +105,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+		GetAnalogueInput ();
         //OnGround = Physics2D.OverlapCircle(groundCheck.position, groundRadius, groundLayer).
 
 
