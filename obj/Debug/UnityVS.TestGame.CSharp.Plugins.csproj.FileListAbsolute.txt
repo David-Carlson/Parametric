@@ -7,3 +7,7 @@ C:\Users\DoctorSalt\Documents\TestGame\Temp\UnityVS_bin\Debug\UnityEditor.xml
 C:\Users\DoctorSalt\Documents\TestGame\obj\Debug\UnityVS.TestGame.CSharp.Plugins.csprojResolveAssemblyReference.cache
 C:\Users\DoctorSalt\Documents\TestGame\obj\Debug\Assembly-CSharp-firstpass.dll
 C:\Users\DoctorSalt\Documents\TestGame\obj\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\DoctorSalt\Documents\TestGame\Temp\UnityVS_bin\Debug\UnityEditor.iOS.Extensions.Xcode.dll
+C:\Users\DoctorSalt\Documents\TestGame\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll
+C:\Users\DoctorSalt\Documents\TestGame\Temp\UnityVS_bin\Debug\UnityEngine.UI.xml
+C:\Users\DoctorSalt\Documents\TestGame\Temp\UnityVS_bin\Debug\UnityEditor.iOS.Extensions.Xcode.xml

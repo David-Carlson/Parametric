@@ -18,15 +18,17 @@ public class PlayerController : MonoBehaviour
     public float radius;
     public bool Grounded = false;
     public LayerMask groundLayer;
+    public LayerMask enemyLayer;
 
     public int MaxTeleports = 3;
     public float AnalogueResetAmt = 0.5f;
-    private bool AnalogueReset = true;
+    private bool AnalogueIsReset = true;
 
     public static float distanceTraveled;
 
+    private Renderer renderer;
 
-    private enum BallState
+    public enum BallState
     {
         BoostCharging,
         Boosting,
@@ -37,7 +39,7 @@ public class PlayerController : MonoBehaviour
         Stunned,
         None,
     };
-    private BallState state = BallState.None;
+    public BallState state = BallState.None;
 
     // First is used to remember the last direction fully pressed down
     // Used for charging shots, doing drop shots
@@ -46,11 +48,21 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         physicsSphere = GetComponent<Rigidbody2D>();
+        renderer = GetComponent<Renderer>();
+        renderer.material.color = Color.cyan;
     }
 
     void FixedUpdate()
     {
         Grounded = Physics2D.OverlapCircle(groundCheck.position, radius, groundLayer);
+    }
+
+    void OnCollissionEnter(Collision coll)
+    {
+        if (coll.gameObject.layer == enemyLayer.value)
+        {
+            StartCoroutine(StunCoroutine(3f));
+        }
     }
 
     // These handle state changes
@@ -63,15 +75,34 @@ public class PlayerController : MonoBehaviour
             // When the player is holding B in the air to charge the boost
             // Cancels if hitting the ground before letting go, 
             case BallState.BoostCharging:
+                SetLastAnalogueDir();
                 if (Grounded)
                 {
-                    //state = BallState.Stunned;
+                    StartCoroutine(StunCoroutine(3f));
+                    break;
+                }
+                if (Input.GetButtonUp("Right Move"))
+                {
+                    if (analogueDirRequests.Count == 0)
+                    {
+                        physicsSphere.velocity *= 2;
+                        Debug.Log("No boost dir");
+                    }
+                    else
+                    {
+                        physicsSphere.velocity = analogueDirRequests[0]*4;
+                        Debug.Log("Going to : " + analogueDirRequests[0]);
+                    }
+                        
+
+                    state = BallState.Boosting;
                 }
                     
                 break;
             // 
             case BallState.Boosting:
-
+                if (Grounded)
+                    state = BallState.None;
                 break;
             case BallState.Dropping:
                 
@@ -86,6 +117,9 @@ public class PlayerController : MonoBehaviour
             case BallState.Teleporting:
 
                 break;
+            case BallState.Stunned:
+                HandleHorizontalMovement(speed);
+                break;
             case BallState.None:
                 
                 HandleHorizontalMovement(speed);
@@ -93,46 +127,48 @@ public class PlayerController : MonoBehaviour
                 {
                     if (Input.GetButtonDown("Down Move"))
                     {
+                        Debug.Log("Ground jump");
                         physicsSphere.velocity = new Vector2(physicsSphere.velocity.x, JumpSpeed);
                         break;
                     }
 
                     if (Input.GetButton("Right Move"))
                     {
-                        Console.WriteLine("Right boost");
+                        Debug.Log("B on ground");
                         HandleHorizontalMovement(speed * 2);
+                        break;
                     }
 
                     if (Input.GetButtonDown("Up Move"))
                     {
                         Console.WriteLine("Tele move");
-                        state = BallState.TeleportCharging;
+                        //state = BallState.TeleportCharging;
                         analogueDirRequests.Clear();
                         SetLastAnalogueDir();
+                        break;
                     }
                 }
                 else
                 {
                     if (Input.GetButtonDown("Down Move"))
                     {
-                        Console.WriteLine("Attempng jump in air");
+                        Console.WriteLine("Attempting jump in air");
                         //state = BallState.Dropping;
                         break;
                     }
 
                     if (Input.GetButtonDown("Right Move"))
                     {
-                        //state = BallState.BoostCharging;
+                        state = BallState.BoostCharging;
+                        analogueDirRequests.Clear();
                         break;
                     }
-
                     if (Input.GetButtonDown("Up Move"))
                     {
                         //state = BallState.TeleportCharging;
                         analogueDirRequests.Clear();
                         SetLastAnalogueDir();
                     }
-                    
                 }
                 break;
         }
@@ -142,23 +178,27 @@ public class PlayerController : MonoBehaviour
     void SetLastAnalogueDir()
     {
         Vector2 currDir = GetAnalogueInput();
-        if (AnalogueReset == false && currDir.SqrMagnitude() <= 0.9f)
-            AnalogueReset = true;
+        if (AnalogueIsReset == false && currDir.SqrMagnitude() <= AnalogueResetAmt)
+            AnalogueIsReset = true;
 
-        if(AnalogueReset == true)
-        if (state == BallState.TeleportCharging)
+        if (AnalogueIsReset && currDir.SqrMagnitude() >= 0.9f)
         {
-            currDir.Normalize();
-            analogueDirRequests.Add(currDir);
-            AnalogueReset = false;
+            if (state == BallState.TeleportCharging)
+            {
+                currDir.Normalize();
+                analogueDirRequests.Add(currDir);
+                AnalogueIsReset = false;
+            }
+            else
+            {
+                currDir.Normalize();
+                analogueDirRequests.Clear();
+                analogueDirRequests.Add(currDir);
+                AnalogueIsReset = false;
+                Debug.Log("Set to: " + currDir);
+            }
         }
-        else
-        {
-            currDir.Normalize();
-            analogueDirRequests.Clear();
-            analogueDirRequests.Add(currDir);
-            AnalogueReset = false;
-        }
+        
     }
 
     Vector2 GetAnalogueInput()
@@ -173,12 +213,18 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator StunCoroutine(float stunTime)
     {
+        Debug.Log("Start stun");
+        renderer.material.color = Color.red;
+        state = BallState.Stunned;
         float timeStunned = 0f;
         while (timeStunned < stunTime)
         {
-            
+            timeStunned += Time.deltaTime;
+            yield return new WaitForFixedUpdate();
         }
-        yield return null;
+        Debug.Log("End stun");
+        state = BallState.None;
+        renderer.material.color = Color.cyan;
     }
 
 

@@ -9,8 +9,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 418036}
   - 212: {fileID: 21208082}
-  - 60: {fileID: 6048844}
-  m_Layer: 0
+  - 61: {fileID: 6199510}
+  m_Layer: 8
   m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24,32 +24,24 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 151574}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.8400002, y: 0, z: 0}
+  m_LocalPosition: {x: 3.25999999, y: -5.5999999, z: 0}
   m_LocalScale: {x: 50.6956787, y: 19.0767021, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!60 &6048844
-PolygonCollider2D:
+--- !u!61 &6199510
+BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 151574}
   m_Enabled: 1
-  m_Material: {fileID: 6200000, guid: 1bd648518d79572469c45934e55e9e9b, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_Offset: {x: 0, y: 0}
-  m_Points:
-    m_Paths:
-    - - {x: -.389999986, y: .0599999987}
-      - {x: -.409999996, y: .0399999991}
-      - {x: -.409999996, y: -.0299999993}
-      - {x: -.389999986, y: -.0500000007}
-      - {x: .389999986, y: -.0500000007}
-      - {x: .409999996, y: -.0299999993}
-      - {x: .409999996, y: .0399999991}
-      - {x: .389999986, y: .0599999987}
+  m_Offset: {x: .000424317754, y: .0035296299}
+  serializedVersion: 2
+  m_Size: {x: .777139902, y: .0712757707}
 --- !u!212 &21208082
 SpriteRenderer:
   m_ObjectHideFlags: 1
